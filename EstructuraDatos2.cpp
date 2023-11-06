@@ -21,14 +21,14 @@ bool EsNumeroValido(string str) {
 
 
 string DecenasUnidadesEnTexto(int numero) {
-	string unidades[] = { "Cero", "Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve" };
+	string unidades[] = { "", "Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve" };
 	string especiales[] = { "Diez", "Once", "Doce", "Trece", "Catorce", "Quince", "Dieciséis", "Diecisiete", "Dieciocho", "Diecinueve" };
 	string decenas[] = { "", "", "Veinti", "Treinta", "Cuarenta", "Cincuenta", "Sesenta", "Setenta", "Ochenta", "Noventa" };
 
 	string texto;
 
 	if (numero == 0) {
-		texto = "Cero";
+		texto = "";
 	}
 	else if (numero < 10) {
 		texto = unidades[numero];
@@ -73,7 +73,7 @@ string numeroATextoRecursivo(int entradaNumero) {
 	else if (entradaNumero < mil)
 	{
 		Auxiliar = entradaNumero / 100;
-		if (Auxiliar ==100)
+		if (entradaNumero ==100)
 		{
 			textoGlobal += "Cien ";
 		}
@@ -123,7 +123,7 @@ int main() {
 		//TransformarNumero();
 		
 		//No mayor a 999,999,999.99
-		if (numero ==0)
+		if (numero == 0)
 		{
 			texto = "Cero";
 		}
