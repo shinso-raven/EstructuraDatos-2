@@ -40,8 +40,7 @@ string entradaValidaADouble(string entrada) {
 				return "";
 			}
 			else
-			{
-				
+			{	
 				entradaNumerica += entrada[i];
 				NumerosFormato++;
 				caracter = entrada[i];
@@ -59,8 +58,6 @@ string entradaValidaADouble(string entrada) {
 	}
 
 	cout << entradaNumerica << endl;
-
-
 	return entradaNumerica;
 }
 
@@ -183,16 +180,15 @@ int main() {
 		else {
 			numero = stod(entradaNumerica);
 
+			//No mayor a 999,999,999.99 CONVERSION
 			if (numero > 999999999.99) {
 				cout << "\n------Numero muy grande------\n";
 				continue;
 			}
 				
-
 			int parte_entera = static_cast<int>(numero);
 			int parte_decimal_entera = round((numero - parte_entera) * 100);
 
-			//No mayor a 999,999,999.99 CONVERSION
 			if (parte_entera == 0)
 			{
 				texto = "Cero";
@@ -212,7 +208,6 @@ int main() {
 			{
 				texto += numeroATextoRecursivo(parte_decimal_entera) + " Centavos";
 			}
-
 
 			cout << endl << texto << endl;
 		}
