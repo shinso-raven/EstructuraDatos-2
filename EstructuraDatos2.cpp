@@ -4,19 +4,44 @@ using namespace std;
 #include <string>
 
 
-bool EsNumeroValido(string str) {
-	if (str.empty()) {
-		return false;
+string entradaValidaADouble(string entrada) {
+	string entradaNumerica = "";
+	int NumerosFormato = 0, max = 2, puntos = 0, coma = 0;
+
+	for (int i = 0; i < entrada.length(); i++)
+	{
+		if (puntos > 1)
+			return "";
+		if (entrada[i] != ',')
+		{
+			if (entrada[i] == '.')
+			{
+				NumerosFormato = 0;
+				puntos++;
+			}
+			if (NumerosFormato >max)
+			{
+				return "";
+			}
+			else
+			{
+				entradaNumerica += entrada[i];
+				NumerosFormato++;
+			}	
+		}
+		else {
+			if ((coma > 0 && NumerosFormato < 3)|| puntos ==1)
+				return "";
+			
+			coma++;
+			NumerosFormato = 0;
+		}
 	}
 
-	try {
-		double numero = stod(str);
-		return true; // Si la conversión fue exitosa, es un número decimal válido.
-	}
-	catch (const invalid_argument& e)
-	{
-		return false; // Si la conversión falla, no es un número decimal válido.
-	}
+	cout << entradaNumerica << endl;
+
+
+	return entradaNumerica;
 }
 
 
@@ -115,31 +140,43 @@ int main() {
 
 	bool continuar = true;
 	int numero;
+	string entrada, entradaNumerica;
 	string texto;
 	while (continuar)
 	{
 		cout << "Indica un numero: ";
-		cin >> numero;
+		cin >> entrada;
 		//TransformarNumero();
-		
-		//No mayor a 999,999,999.99
-		if (numero == 0)
+
+		entradaNumerica = entradaValidaADouble(entrada);
+
+		if (entradaNumerica =="")
 		{
-			texto = "Cero";
+			cout << "\nFormato invalido";
+			continue;
 		}
-		else
-		{
-			texto = numeroATextoRecursivo(numero) + " Pesos dominicanos con ";
+		else {
+			numero = stod(entradaNumerica);
 
+			//No mayor a 999,999,999.99 CONVERSION
+			if (numero == 0)
+			{
+				texto = "Cero";
+			}
+			else
+			{
+				texto = numeroATextoRecursivo(numero) + " Pesos dominicanos con ";
+
+			}
+			//Agregar centimos:
+			/*
+			* int parte_entera = static_cast<int>(num);
+
+				double parte_decimal = num - parte_entera;
+			*/
+
+			cout << endl << texto << endl;
 		}
-		//Agregar centimos:
-		/*
-		* int parte_entera = static_cast<int>(num);
-
-			double parte_decimal = num - parte_entera;
-		*/
-
-		cout << endl << texto<< endl;
 	}
 	return 0;
 }
