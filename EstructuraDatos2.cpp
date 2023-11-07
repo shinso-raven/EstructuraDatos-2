@@ -132,13 +132,9 @@ string numeroATextoRecursivo(int entradaNumero) {
 	{
 		Auxiliar = entradaNumero / 100;
 		if (entradaNumero == 100)
-		{
 			textoGlobal += "Cien ";
-		}
 		else
-		{
 			textoGlobal += unidades[Auxiliar] + " ";
-		}
 
 		textoGlobal += numeroATextoRecursivo(entradaNumero % 100);
 	}
@@ -146,13 +142,9 @@ string numeroATextoRecursivo(int entradaNumero) {
 	{
 		Auxiliar = entradaNumero / 1000;
 		if (Auxiliar == 1)
-		{
 			textoGlobal += "Mil ";
-		}
 		else
-		{
 			textoGlobal += numeroATextoRecursivo(Auxiliar) + " Mil ";
-		}
 
 		textoGlobal += numeroATextoRecursivo(entradaNumero % 1000);
 	}
