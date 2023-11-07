@@ -40,14 +40,14 @@ bool EsNumeroValido(string str) {
     }
 }
 
-int* obtenerprimerasubdivision(double num) {
+int* DivisionDeTerminos(double num) {
     int* arreglo = new int[7]; // Asigna dinámicamente un arreglo de 7 enteros
 
     // Obtener la parte entera del número
     int parte_entera = static_cast<int>(num);
 
     // Obtener la parte decimal del número
-    int parte_decimal_entera = static_cast<int>((num - parte_entera) * 100); // Multiplicar por 100 para obtener los centavos como número entero
+    int parte_decimal_entera = round((num - parte_entera) * 100); // Multiplicar por 100 para obtener los centavos como número entero
 
     // Calcular la subdivisión
     arreglo[0] = (parte_entera / 100000000); // Centenas de millones
@@ -71,7 +71,7 @@ string CentenasEnTexto(int centena, bool cientos)
 
     return unidades[centena];
 }
-
+//parametros: un_uno es para diferenciar si se usa UN en vez de UNO. el booleano CENT es solo para expresar CERO. Que es valido para los centimos.
 string DecenasUnidadesEnTexto(int numero, bool un_uno, bool cent) {
     string unidades[] = { " ", "Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve" };
     string especiales[] = { "Diez", "Once", "Doce", "Trece", "Catorce", "Quince", "Dieciséis", "Diecisiete", "Dieciocho", "Diecinueve" };
@@ -79,7 +79,7 @@ string DecenasUnidadesEnTexto(int numero, bool un_uno, bool cent) {
 
     string texto;
 
-    if (un_uno == 1)
+    if (un_uno == true)
     {
         unidades[1] = "Un";
     }
@@ -123,24 +123,30 @@ void finality(int* arr)
 
     if (arr[0] + arr[1] != 0)
     {
-        texto += CentenasEnTexto(arr[0], arr[1] > 0) + " " + DecenasUnidadesEnTexto(arr[1], arr[0] == 0, false) + ((arr[0] + arr[1] > 1) ? " millones " : " millón ");
-    }
+        texto += CentenasEnTexto(arr[0], arr[1] > 0) + " " + DecenasUnidadesEnTexto(arr[1], arr[0] == 0, false) + ((arr[0] == 0 && arr[1] == 1) ? " Millon " : " Millones ");
+    } //cada if compone la estructura de unidades de centena y las decenas e unidades. 
+        //El operador ? es ternario. Funciona como un IF resumido. En este caso verifica si solo hay una unidad en esta seccion. osea, UN MILLON.
+        //Para diferenciar entre UN y UNO. se utiliza de referencia las centenas. Si existe un valor de centena, el parametro sera false y se colocara UNO. En el caso contrario se ocloca UN.
+        //EJ: 101 = Ciento uno. 1,000,000 = UN MILLON.
+
     if (arr[2] + arr[3] != 0)
     {
         texto += CentenasEnTexto(arr[2], arr[3] > 0) + " ";
 
-        texto += ((arr[2] == 0 && arr[3] == 1) ? "" : DecenasUnidadesEnTexto(arr[3], arr[2] == 0, false)) + " Mil ";
+        texto += ((arr[2] == 0 && arr[3] == 1) ? "" : DecenasUnidadesEnTexto(arr[3], arr[2] > 0, false)) + " Mil ";
     }
+    //En este caso si exite solo la unidad (1). El ternario va a omitir UN y UNO y solo colocara MIl para evitar la salida UN MIL,
     if (arr[4] + arr[5] != 0)
     {
-        texto += CentenasEnTexto(arr[4], arr[5] > 0) + " " + DecenasUnidadesEnTexto(arr[5], arr[4] == 0, false);
+        texto += CentenasEnTexto(arr[4], arr[5] > 0) + " " + DecenasUnidadesEnTexto(arr[5], (arr[4] == 0), false);
     }
 
-    texto += " Pesos Dominicanos Con " + DecenasUnidadesEnTexto(arr[6], true, true) + " Centimos ";
+    texto += " Pesos Dominicanos Con " + DecenasUnidadesEnTexto(arr[6], arr[6] == 1, true) + " Centimos ";
 
     cout << texto;
 }
-int main() {
+int main()
+{
     while (true) {
         double numero;
         string entrada;
@@ -153,7 +159,7 @@ int main() {
 
         if (EsNumeroValido(entrada)) {
             numero = stod(entrada);
-            int* resultado = obtenerprimerasubdivision(numero);
+            int* resultado = DivisionDeTerminos(numero);
 
             cout << endl;
             finality(resultado);
