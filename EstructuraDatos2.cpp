@@ -3,9 +3,25 @@ using namespace std;
 #include <iostream>
 #include <string>
 
+bool EsNumero(string numeroStr) {
+
+	try {
+		double numero = stod(numeroStr);
+		// Verificar si el número está dentro del rango deseado
+		if (numero >= 0 && numero <= 9) {
+			return true; // Si la conversión fue exitosa y está en el rango, es válido.
+		}
+		else {
+			return false; // Si el número no está en el rango, no es válido.
+		}
+	}
+	catch (const invalid_argument& e) {
+		return false; // Si la conversión falla, no es un número decimal válido.
+	}
+}
 
 string entradaValidaADouble(string entrada) {
-	string entradaNumerica = "";
+	string entradaNumerica = "", caracter;
 	int NumerosFormato = 0, max = 2, puntos = 0, coma = 0;
 
 	for (int i = 0; i < entrada.length(); i++)
@@ -19,20 +35,24 @@ string entradaValidaADouble(string entrada) {
 				NumerosFormato = 0;
 				puntos++;
 			}
-			if (NumerosFormato >max)
+			if (NumerosFormato > max)
 			{
 				return "";
 			}
 			else
 			{
+				
 				entradaNumerica += entrada[i];
 				NumerosFormato++;
-			}	
+				caracter = entrada[i];
+				if (!EsNumero(caracter) && caracter != ".")
+					return "";
+			}
 		}
 		else {
-			if ((coma > 0 && NumerosFormato < 3)|| puntos ==1)
+			if ((coma > 0 && NumerosFormato < 3) || puntos == 1)
 				return "";
-			
+
 			coma++;
 			NumerosFormato = 0;
 		}
@@ -46,7 +66,7 @@ string entradaValidaADouble(string entrada) {
 
 
 string DecenasUnidadesEnTexto(int numero) {
-	string unidades[] = { "", "Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve" };
+	string unidades[] = { "", "Un", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve" };
 	string especiales[] = { "Diez", "Once", "Doce", "Trece", "Catorce", "Quince", "Dieciséis", "Diecisiete", "Dieciocho", "Diecinueve" };
 	string decenas[] = { "", "", "Veinti", "Treinta", "Cuarenta", "Cincuenta", "Sesenta", "Setenta", "Ochenta", "Noventa" };
 
@@ -98,7 +118,7 @@ string numeroATextoRecursivo(int entradaNumero) {
 	else if (entradaNumero < mil)
 	{
 		Auxiliar = entradaNumero / 100;
-		if (entradaNumero ==100)
+		if (entradaNumero == 100)
 		{
 			textoGlobal += "Cien ";
 		}
@@ -106,10 +126,10 @@ string numeroATextoRecursivo(int entradaNumero) {
 		{
 			textoGlobal += unidades[Auxiliar] + " ";
 		}
-			
+
 		textoGlobal += numeroATextoRecursivo(entradaNumero % 100);
 	}
-	else if( entradaNumero < millon)
+	else if (entradaNumero < millon)
 	{
 		Auxiliar = entradaNumero / 1000;
 		if (Auxiliar == 1)
@@ -120,13 +140,13 @@ string numeroATextoRecursivo(int entradaNumero) {
 		{
 			textoGlobal += numeroATextoRecursivo(Auxiliar) + " Mil ";
 		}
-		
+
 		textoGlobal += numeroATextoRecursivo(entradaNumero % 1000);
 	}
 	else
 	{
 		Auxiliar = entradaNumero / millon;
-		if(Auxiliar == 1)
+		if (Auxiliar == 1)
 			textoGlobal += "Un Millon ";
 		else
 			textoGlobal += numeroATextoRecursivo(Auxiliar) + " Millones ";
@@ -139,41 +159,60 @@ string numeroATextoRecursivo(int entradaNumero) {
 int main() {
 
 	bool continuar = true;
-	int numero;
+	double numero;
 	string entrada, entradaNumerica;
 	string texto;
 	while (continuar)
 	{
 		cout << "Indica un numero: ";
 		cin >> entrada;
+		if (entrada == "-1") {
+			continuar = false;
+			continue;
+		}
+			;
 		//TransformarNumero();
 
 		entradaNumerica = entradaValidaADouble(entrada);
 
-		if (entradaNumerica =="")
+		if (entradaNumerica == "")
 		{
-			cout << "\nFormato invalido";
+			cout << "\n------Formato invalido------\n";
 			continue;
 		}
 		else {
 			numero = stod(entradaNumerica);
 
+			if (numero > 999999999.99) {
+				cout << "\n------Numero muy grande------\n";
+				continue;
+			}
+				
+
+			int parte_entera = static_cast<int>(numero);
+			int parte_decimal_entera = round((numero - parte_entera) * 100);
+
 			//No mayor a 999,999,999.99 CONVERSION
-			if (numero == 0)
+			if (parte_entera == 0)
 			{
 				texto = "Cero";
 			}
 			else
 			{
-				texto = numeroATextoRecursivo(numero) + " Pesos dominicanos con ";
-
+				texto = numeroATextoRecursivo(parte_entera);
 			}
-			//Agregar centimos:
-			/*
-			* int parte_entera = static_cast<int>(num);
+			texto += " Pesos dominicanos con ";
 
-				double parte_decimal = num - parte_entera;
-			*/
+			//Agregar centimos:
+			if (parte_decimal_entera == 0)
+			{
+				texto += "Cero centavos";
+			}
+			else
+			{
+				texto += numeroATextoRecursivo(parte_decimal_entera) + " Centavos";
+			}
+
 
 			cout << endl << texto << endl;
 		}
