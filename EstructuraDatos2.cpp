@@ -8,7 +8,7 @@
  *  1113891 - Alan Arturo Sosa Del Villar
  *  1114790 - Gabriel Antonio Alba Natera
  *  1114290 - Angel Antonio Orona Pimentel
- *  Radhames - Ventura 1116252
+ *  1116252 - Radhames Ventura 
  *
  *  Fecha en la que se desarrollo el programa (dd/mm/aa):
  *  06/11/2023
