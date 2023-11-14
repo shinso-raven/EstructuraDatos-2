@@ -25,11 +25,10 @@ using namespace std;
 int main() {
    
     bool continuar = true;
-    while (continuar)
-    {
+    
         
         EjectutarTicTacToe();
 
-    }
+   
     return 0;
 }

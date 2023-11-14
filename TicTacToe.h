@@ -18,9 +18,10 @@ char TurnoJugador = 'X';
 string playerX, playerO;
 
 
-bool EsNumeroValido(string str) {
+
+bool EsNumeroValido(string str, int maxChar) {
     int digito;
-    if (str.empty() && str.length() < 2) {
+    if (str.empty() || str.length() > maxChar) {
         return false;
     }
 
@@ -39,17 +40,43 @@ bool EsNumeroValido(string str) {
     return true;
 }
 
+void Gotoxy(int x, int y) {
+    HANDLE manejadorConsola ;
+    COORD coordenada;
+    coordenada.X = x;
+    coordenada.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordenada);
+}
+void NombreJugadores() {
+    int y = 8;
+    Gotoxy(10, y++);cout << char(218);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(191) << endl;
+    Gotoxy(10, y++);cout << char(179) << "    Jugadores:       ";
+    Gotoxy(10, y++);cout << char(179) << "                     ";
+    Gotoxy(10, y++);cout << char(179) << "   " << playerX << " => X";
+    Gotoxy(10, y++);cout << char(179) << "   " << playerO << " => O";
+    Gotoxy(10, y++);cout << char(179) << "                     ";
+    Gotoxy(10, y++);cout << char(192);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(217) << endl;
+
+    Gotoxy(0, 0);
+}
+
+
 // Función para imprimir el tablero
 void ImprimirTablero() {
+    int margenX = 50;
+    Gotoxy(margenX, 7); cout << "00";
     for (int i = 0; i < 3; i++) {
-        cout << "-------------" << endl;
+        Gotoxy(margenX, 8 + (i * 2)); cout << "  -------------" << endl; Gotoxy(margenX, 9 + (i * 2));cout << "  ";
+        
         for (int j = 0; j < 3; j++)
         {
             cout << "| " << Tablero[i][j] << " ";
         }
-        cout << "|" << endl;
+        cout << "|" ;
     }
-    cout << "-------------" << endl;
+    Gotoxy(margenX, 14);cout << "  -------------" << endl;
+    Gotoxy(0, 0);
+    NombreJugadores();
 }
 
 
@@ -75,42 +102,58 @@ bool Victoria() {
     return false;
 }
 
-void LimpiarPantalla() {
-    system("pause");
-    system("cls");
-}
+
 
 void menuInicio(char &JugadorInicial) {
     bool inputValid = false;
-    int teclado;
+    string teclado;
+    int y = 0;
+
+    Gotoxy(40,y++);cout << char(218);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(191) << endl;
+    Gotoxy(40,y++);cout << char(179) << "                     " << char(179) << endl;
+    Gotoxy(40,y++);cout << char(179) << "                     " << char(179) << endl;
+    Gotoxy(40,y++);cout << char(179) << "     Tic Tac Toe     " << char(179) << endl;
+    Gotoxy(40,y++);cout << char(179) << "      BruteForce     " << char(179) << endl;
+    Gotoxy(40,y++);cout << char(179) << "                     " << char(179) << endl;
+    Gotoxy(40,y++);cout << char(192);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(217) << endl;
+  
+    
 
     // Entrada de nombres de jugadores
+    cout << "\t\tMENU INICIO\n";
     cout << "Ingrese el nombre del jugador X: ";
     cin >> playerX;
     cout << "Ingrese el nombre del jugador O: ";
     cin >> playerO;
 
-    // Selección del jugador que comienza
-    cout << "Seleccione quién comenzará (X o O): ";
+    
 
     while (!inputValid)
     {
-        teclado = _getch();
+        // Selección del jugador que comienza
+        cout << "Seleccione quién comenzará (" << playerX << "[X] o "<<playerO<<"[O] ): ";
+        cin >> teclado;
 
-        if (teclado == 88 || teclado == 120) {
+        if (teclado == "X" || teclado == "x") {
             JugadorInicial = 'X';
             inputValid = true;
         }
-        else if (teclado == 79 || teclado == 111) {
+        else if (teclado == "O" || teclado == "o") {
             JugadorInicial = 'O';
             inputValid = true;
         }
-        else {
+        else if(!EsNumeroValido(teclado, 1)){
             cout << "\n\tEntrada inválida. Debes seleccionar 'X' o 'O'." << endl;
         }
         cout << endl;
     }
 }
+
+void LimpiarPantalla() {
+    system("pause");
+    system("cls");
+}
+
 void EjectutarTicTacToe()
 {
     system("COLOR 5F");
@@ -120,29 +163,30 @@ void EjectutarTicTacToe()
     char JugadorInicial;
     
     
+    //     Preambulo incio juegos 
     menuInicio(JugadorInicial);
+    LimpiarPantalla();
 
-                 //     Preambulo incio juegos 
     if (JugadorInicial == 'X' || JugadorInicial == 'x') {
         TurnoJugador = 'X';
     }
     else {
         TurnoJugador = 'O';
     }
-
-    LimpiarPantalla();
-
+  
     //Juego
     while (true) {
-        cout << "Turno de " << ((TurnoJugador == 'X') ? playerX : playerO) << endl;
         ImprimirTablero();
-
+        Gotoxy(50, 5);
+        cout << "Turno de " << ((TurnoJugador == 'X') ? playerX : playerO) << endl;
+        Gotoxy(0, 0);
         // Entrada de filas y columnas del jugador
         cout << "Ingresa la fila y columna (1-3): ";
         cin >> entrada;
 
-        if (!EsNumeroValido(entrada))
+        if (!EsNumeroValido(entrada,2))
         {
+            Gotoxy(30,25);
             cout << "Entrada inválida. Solo dos numeros entre 3 y 1." << endl;
             LimpiarPantalla();
             continue;
@@ -153,6 +197,7 @@ void EjectutarTicTacToe()
 
         if (Tablero[Fila][Columna] != ' ')
         {
+            Gotoxy(30, 25);
             cout << "Movimiento inválido, YA HAY una marca. Inténtalo de nuevo." << endl;
             LimpiarPantalla();
             continue;
@@ -165,6 +210,7 @@ void EjectutarTicTacToe()
         if (Victoria()) {
             system("cls");
             ImprimirTablero();
+            Gotoxy(30, 25);
             cout << "¡" << ((TurnoJugador == 'X') ? playerX : playerO) << " ha ganado!" << endl;
             break;
         }
@@ -172,6 +218,7 @@ void EjectutarTicTacToe()
         // Verificación de empate
         if (Movimientos == 9) {
             ImprimirTablero();
+            Gotoxy(30, 25);
             cout << "¡Empate!" << endl;
             break;
         }
