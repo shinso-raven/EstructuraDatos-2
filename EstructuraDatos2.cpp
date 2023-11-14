@@ -18,6 +18,7 @@ using namespace std;
 
 #include <iostream>
 #include <string>
+#include "TicTacToe.h"
 
 
 
@@ -27,7 +28,7 @@ int main() {
     while (continuar)
     {
         
-
+        EjectutarTicTacToe();
 
     }
     return 0;

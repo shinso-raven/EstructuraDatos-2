@@ -130,6 +130,7 @@
     <ClCompile Include="EstructuraDatos2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TicTacToe.h" />
     <ClInclude Include="NumeroALetra.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
