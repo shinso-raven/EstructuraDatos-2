@@ -19,6 +19,7 @@ using namespace std;
 #include <iostream>
 #include <string>
 
+bool EsNumero(string numeroStr) {
 
 bool EsNumeroValido(string str) {
     if (str.empty()) {
@@ -27,150 +28,183 @@ bool EsNumeroValido(string str) {
 
     try {
         double numero = stod(str);
-        // Verificar si el número está dentro del rango deseado
-        if (numero >= 0.0 && numero <= 999999999.99) {
-            return true; // Si la conversión fue exitosa y está en el rango, es válido.
-        }
-        else {
-            return false; // Si el número no está en el rango, no es válido.
-        }
+        return true; // Si la conversión fue exitosa, es un número decimal válido.
     }
-    catch (const invalid_argument& e) {
+    catch (const invalid_argument& e)
+    {
         return false; // Si la conversión falla, no es un número decimal válido.
     }
 }
-
-int* DivisionDeTerminos(double num) {
+int* obtenerprimerasubdivision(double num) {
     int* arreglo = new int[7]; // Asigna dinámicamente un arreglo de 7 enteros
 
-    // Obtener la parte entera del número
-    int parte_entera = static_cast<int>(num);
+string entradaValidaADouble(string entrada) {
+	string entradaNumerica = "", caracter;
+	int NumerosFormato = 0, max = 2, puntos = 0, coma = 0;
 
     // Obtener la parte decimal del número
-    int parte_decimal_entera = round((num - parte_entera) * 100); // Multiplicar por 100 para obtener los centavos como número entero
+    double parte_decimal = num - parte_entera;
 
     // Calcular la subdivisión
     arreglo[0] = (parte_entera / 100000000); // Centenas de millones
     arreglo[1] = (parte_entera % 100000000) / 1000000; // Decenas y unidades de millón
-    arreglo[2] = ((parte_entera % 1000000) / 100000); // Centenas de miles
-    arreglo[3] = (parte_entera % 100000) / 1000; // Decenas y unidades de miles
-    arreglo[4] = (parte_entera / 100) % 10; // Centenas
-    arreglo[5] = parte_entera % 100; // Decenas y unidades
-    arreglo[6] = parte_decimal_entera; // Centavos como número entero
-
+    arreglo[2] = ((parte_entera %  1000000) / 100000); // Centenas de miles
+    arreglo[3] = (parte_entera %    100000) / 1000; // Decenas y unidades de miles
+    arreglo[4] = (parte_entera /       100) % 10; // Centenas
+    arreglo[5] = parte_entera %        100; // Decenas y unidades
+    arreglo[6] = parte_decimal *       100; // Decimales
     return arreglo;
 }
 
-string CentenasEnTexto(int centena, bool cientos)
+string CentenasEnTexto(int centena)
 {
-    string unidades[] = { "", "Cien", "Doscientos", "Trescientos", "Cuatrocientos", "Quinientos", "Seiscientos", "Setecientos", "Ochocientos", "Novecientos" };
-    if (cientos)
-    {
-        unidades[1] = "Ciento";
-    }
+    string unidades[] = { "Cero", "Cien", "Doscientos", "Trescientos", "Cuatrocientos", "Quinientos", "Seiscientos", "Setecientos", "Ochocientos", "Novecientos" };
 
     return unidades[centena];
 }
-//parametros: un_uno es para diferenciar si se usa UN en vez de UNO. el booleano CENT es solo para expresar CERO. Que es valido para los centimos.
-string DecenasUnidadesEnTexto(int numero, bool un_uno, bool cent) {
-    string unidades[] = { " ", "Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve" };
+
+string DecenasUnidadesEnTexto(int numero) {
+    string unidades[] = { "Cero", "Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve" };
     string especiales[] = { "Diez", "Once", "Doce", "Trece", "Catorce", "Quince", "Dieciséis", "Diecisiete", "Dieciocho", "Diecinueve" };
     string decenas[] = { "", "", "Veinti", "Treinta", "Cuarenta", "Cincuenta", "Sesenta", "Setenta", "Ochenta", "Noventa" };
 
-    string texto;
+	string texto;
 
-    if (un_uno == true)
-    {
-        unidades[1] = "Un";
-    }
-
-    if (numero == 0 && cent == true) {
-        texto = "Cero";
-    }
-    else if (numero < 10 && numero > 0) {
-        texto = unidades[numero];
-    }
-    else if (numero < 20) {
-        texto = especiales[numero - 10];
-    }
-    else {
-        int decena = numero / 10;
-        int unidad = numero % 10;
-
-        if (decena == 2) {
-            // Caso especial para "Veinti"
-            if (unidad == 0) {
-                texto = "Veinte";
-            }
-            else {
-                texto = decenas[decena] + unidades[unidad];
-            }
-        }
-        else if (unidad == 0) {
-            texto = decenas[decena];
-        }
-        else {
-            texto = decenas[decena] + " y " + unidades[unidad];
-        }
-    }
-
-    return texto;
+	if (numero == 0) {
+		texto = "";
+	}
+	else if (numero < 10) {
+		texto = unidades[numero];
+	}
+	else if (numero < 20) {
+		texto = especiales[numero - 10];
+	}
+	else {
+		int decena = numero / 10;
+		int unidad = numero % 10;
+		if (decena == 2) {
+			// Caso especial para "Veinti"
+			if (unidad == 0) {
+				texto = "Veinte";
+			}
+			else {
+				texto = decenas[decena] + unidades[unidad];
+			}
+		}
+		else if (unidad == 0) {
+			texto = decenas[decena];
+		}
+		else {
+			texto = decenas[decena] + " y " + unidades[unidad];
+		}
+	}
+	return texto;
 }
 
 void finality(int* arr)
 {
-    string texto = "";
+    string texto;
+    string nomenclatura[] = { " Millones ", " mil "," Pesos dominicanos con ", " Centimos " };
 
-    if (arr[0] + arr[1] != 0)
+    for (size_t i = 0; i < 7; i++)
     {
-        texto += CentenasEnTexto(arr[0], arr[1] > 0) + " " + DecenasUnidadesEnTexto(arr[1], arr[0] == 0, false) + ((arr[0] == 0 && arr[1] == 1) ? " Millon " : " Millones ");
-    } //cada if compone la estructura de unidades de centena y las decenas e unidades. 
-        //El operador ? es ternario. Funciona como un IF resumido. En este caso verifica si solo hay una unidad en esta seccion. osea, UN MILLON.
-        //Para diferenciar entre UN y UNO. se utiliza de referencia las centenas. Si existe un valor de centena, el parametro sera false y se colocara UNO. En el caso contrario se ocloca UN.
-        //EJ: 101 = Ciento uno. 1,000,000 = UN MILLON.
+        if (arr[i] == 0 && i != 6)
+        {
+            continue;
+        }
+        else
+        {
+            if (i % 2 == 0 && i < 6)
+            {
+                texto += CentenasEnTexto(arr[i]);
+                if (arr[i] == 1 && arr[i + 1] != 0)
+                {
+                    texto += "to";
+                }
 
-    if (arr[2] + arr[3] != 0)
-    {
-        texto += CentenasEnTexto(arr[2], arr[3] > 0) + " ";
+            }
+            else
+            {
+                texto += DecenasUnidadesEnTexto(arr[i]);
+            }
 
-        texto += ((arr[2] == 0 && arr[3] == 1) ? "" : DecenasUnidadesEnTexto(arr[3], arr[2] > 0, false)) + " Mil ";
+            if (i == 1)
+            {
+                texto += nomenclatura[0];
+            }
+            else if (i == 3)
+            {
+                texto += nomenclatura[1];
+
+            }
+            else if (i == 5)
+            {
+                texto += nomenclatura[2];
+            }
+
+            else if (i == 6)
+            {
+                texto += nomenclatura[3] + " ";
+
+            }
+            else
+            {
+                texto += " ";
+
+            }
+
+
+        }
     }
-    //En este caso si exite solo la unidad (1). El ternario va a omitir UN y UNO y solo colocara MIl para evitar la salida UN MIL,
-    if (arr[4] + arr[5] != 0)
-    {
-        texto += CentenasEnTexto(arr[4], arr[5] > 0) + " " + DecenasUnidadesEnTexto(arr[5], (arr[4] == 0), false);
-    }
-
-    texto += " Pesos Dominicanos Con " + DecenasUnidadesEnTexto(arr[6], arr[6] == 1, true) + " Centimos ";
 
     cout << texto;
-}
-int main()
-{
-    while (true) {
-        double numero;
-        string entrada;
-        cout << "Ingresa un numero valido (o -1 para salir): ";
-        getline(cin, entrada);
+    cout << endl;
 
-        if (entrada == "-1") {
-            break;  // Salir del bucle si se ingresa -1
-        }
+}
+
+
+void TransformarNumero() {
+    double numero;
+    string entrada;
+    bool invalido = true;
+
+    while (invalido) {
+        cout << "Ingresa un número válido: ";
+        cin >> entrada;
 
         if (EsNumeroValido(entrada)) {
             numero = stod(entrada);
-            int* resultado = DivisionDeTerminos(numero);
-
-            cout << endl;
-            finality(resultado);
-            delete[] resultado;
+            break;
         }
         else {
-            cout << "No has ingresado un numero valido. Intentalo de nuevo." << endl;
+            cout << "No has ingresado un número válido. Inténtalo de nuevo." << endl;
         }
-
-        cout << endl;
     }
 
+
+    int* resultado = obtenerprimerasubdivision(numero);
+
+
+    for (size_t i = 0; i < 7; i++)
+    {
+        cout << resultado[i] << " ";
+    }
+
+    cout << endl;
+
+    finality(resultado);
+
+    delete[] resultado;
+}
+
+int main() {
+   
+    bool continuar = true;
+    while (continuar)
+    {
+        TransformarNumero();
+
+
+    }
     return 0;
 }
