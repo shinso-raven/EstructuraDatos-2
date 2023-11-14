@@ -1,7 +1,22 @@
+/*
+ *  +=============== Presentación ===============+
+ *
+ *  Enunciado del problema:
+ *  Realizar un programa C++ que un juego de Tic Tac Toe usando el paradigma de Fuerza Bruta (Brute Force).
+ *  Autores (ID - Nombre):
+ * 1107555 - Angel Soriano
+ *  1114790 - Gabriel Antonio Alba Natera
+ *  1114290 - Angel Antonio Orona Pimentel
+ *  1116252 - Radhames Ventura
+ *
+ *  Fecha en la que se desarrollo el programa (dd/mm/aa):
+ *  14/11/2023
+ */
+
+
+
 #include <iostream>
 #include <string>
-
-
 #include <conio.h>
 #include <windows.h>
 
@@ -21,7 +36,7 @@ string playerX, playerO;
 
 bool EsNumeroValido(string str, int maxChar) {
     int digito;
-    if (str.empty() || str.length() > maxChar) {
+    if (str.empty() || str.length() != maxChar) {
         return false;
     }
 
@@ -156,7 +171,7 @@ void LimpiarPantalla() {
 
 void EjectutarTicTacToe()
 {
-    system("COLOR 5F");
+    system("COLOR 8F");
     int Fila, Columna, EntradaInt;
     int Movimientos = 0;
     string entrada, invalida;
@@ -198,7 +213,7 @@ void EjectutarTicTacToe()
         if (Tablero[Fila][Columna] != ' ')
         {
             Gotoxy(30, 25);
-            cout << "Movimiento inválido, YA HAY una marca. Inténtalo de nuevo." << endl;
+            cout << "Movimiento inválido, Ya HAY una marca. Inténtalo de nuevo." << endl;
             LimpiarPantalla();
             continue;
         }
