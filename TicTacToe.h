@@ -4,7 +4,7 @@
  *  Enunciado del problema:
  *  Realizar un programa C++ que un juego de Tic Tac Toe usando el paradigma de Fuerza Bruta (Brute Force).
  *  Autores (ID - Nombre):
- * 1107555 - Angel Soriano
+ *  1107555 - Angel Soriano
  *  1114790 - Gabriel Antonio Alba Natera
  *  1114290 - Angel Antonio Orona Pimentel
  *  1116252 - Radhames Ventura
@@ -19,6 +19,7 @@
 #include <string>
 #include <conio.h>
 #include <windows.h>
+
 
 using namespace std;
 
@@ -54,6 +55,10 @@ bool EsNumeroValido(string str, int maxChar) {
     // Evitar que no este entre 1 y 3
     return true;
 }
+#pragma region Pintura
+
+
+
 
 void Gotoxy(int x, int y) {
     HANDLE manejadorConsola ;
@@ -94,6 +99,57 @@ void ImprimirTablero() {
     NombreJugadores();
 }
 
+void menuInicio(char& JugadorInicial) {
+    bool inputValid = false;
+    string teclado;
+    int y = 0;
+
+    Gotoxy(40, y++); cout << char(218);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(191) << endl;
+    Gotoxy(40, y++); cout << char(179) << "                     " << char(179) << endl;
+    Gotoxy(40, y++); cout << char(179) << "                     " << char(179) << endl;
+    Gotoxy(40, y++); cout << char(179) << "     Tic Tac Toe     " << char(179) << endl;
+    Gotoxy(40, y++); cout << char(179) << "      BruteForce     " << char(179) << endl;
+    Gotoxy(40, y++); cout << char(179) << "                     " << char(179) << endl;
+    Gotoxy(40, y++); cout << char(192);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(217) << endl;
+
+
+
+    // Entrada de nombres de jugadores
+    cout << "\t\tMENU INICIO\n";
+    cout << "Ingrese el nombre del jugador X: ";
+    cin >> playerX;
+    cout << "Ingrese el nombre del jugador O: ";
+    cin >> playerO;
+
+
+
+    while (!inputValid)
+    {
+        // Selección del jugador que comienza
+        cout << "Seleccione quién comenzará (" << playerX << "[X] o " << playerO << "[O] ): ";
+        cin >> teclado;
+
+        if (teclado == "X" || teclado == "x") {
+            JugadorInicial = 'X';
+            inputValid = true;
+        }
+        else if (teclado == "O" || teclado == "o") {
+            JugadorInicial = 'O';
+            inputValid = true;
+        }
+        else if (!EsNumeroValido(teclado, 1)) {
+            cout << "\n\tEntrada inválida. Debes seleccionar 'X' o 'O'." << endl;
+        }
+        cout << endl;
+    }
+}
+
+void LimpiarPantalla() {
+    system("pause");
+    system("cls");
+}
+
+#pragma endregion
 
 // Función para verificar si alguien ha ganado, usa la fuerza bruta para verificar todas las opciones de victoria posibles. 
 bool Victoria() {
@@ -119,82 +175,37 @@ bool Victoria() {
 
 
 
-void menuInicio(char &JugadorInicial) {
-    bool inputValid = false;
-    string teclado;
-    int y = 0;
 
-    Gotoxy(40,y++);cout << char(218);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(191) << endl;
-    Gotoxy(40,y++);cout << char(179) << "                     " << char(179) << endl;
-    Gotoxy(40,y++);cout << char(179) << "                     " << char(179) << endl;
-    Gotoxy(40,y++);cout << char(179) << "     Tic Tac Toe     " << char(179) << endl;
-    Gotoxy(40,y++);cout << char(179) << "      BruteForce     " << char(179) << endl;
-    Gotoxy(40,y++);cout << char(179) << "                     " << char(179) << endl;
-    Gotoxy(40,y++);cout << char(192);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(217) << endl;
-  
-    
-
-    // Entrada de nombres de jugadores
-    cout << "\t\tMENU INICIO\n";
-    cout << "Ingrese el nombre del jugador X: ";
-    cin >> playerX;
-    cout << "Ingrese el nombre del jugador O: ";
-    cin >> playerO;
-
-    
-
-    while (!inputValid)
-    {
-        // Selección del jugador que comienza
-        cout << "Seleccione quién comenzará (" << playerX << "[X] o "<<playerO<<"[O] ): ";
-        cin >> teclado;
-
-        if (teclado == "X" || teclado == "x") {
-            JugadorInicial = 'X';
-            inputValid = true;
-        }
-        else if (teclado == "O" || teclado == "o") {
-            JugadorInicial = 'O';
-            inputValid = true;
-        }
-        else if(!EsNumeroValido(teclado, 1)){
-            cout << "\n\tEntrada inválida. Debes seleccionar 'X' o 'O'." << endl;
-        }
-        cout << endl;
-    }
-}
-
-void LimpiarPantalla() {
-    system("pause");
-    system("cls");
-}
 
 void EjectutarTicTacToe()
 {
-    system("COLOR 8F");
     int Fila, Columna, EntradaInt;
     int Movimientos = 0;
     string entrada, invalida;
     char JugadorInicial;
-    
-    
+
+
+    system("COLOR 8F");
     //     Preambulo incio juegos 
     menuInicio(JugadorInicial);
     LimpiarPantalla();
 
+    //Ya la selección fue validada
     if (JugadorInicial == 'X' || JugadorInicial == 'x') {
         TurnoJugador = 'X';
     }
     else {
         TurnoJugador = 'O';
     }
+
   
     //Juego
     while (true) {
         ImprimirTablero();
-        Gotoxy(50, 5);
+        Gotoxy(50, 5); //Imprime justo arriba del tablero
         cout << "Turno de " << ((TurnoJugador == 'X') ? playerX : playerO) << endl;
         Gotoxy(0, 0);
+
         // Entrada de filas y columnas del jugador
         cout << "Ingresa la fila y columna (1-3): ";
         cin >> entrada;
@@ -217,7 +228,8 @@ void EjectutarTicTacToe()
             LimpiarPantalla();
             continue;
         }
-        // Actualización del tablero
+
+        // Actualización del tablero, con movimiento valido
         Tablero[Fila][Columna] = TurnoJugador;
         Movimientos++;
 
@@ -225,7 +237,7 @@ void EjectutarTicTacToe()
         if (Victoria()) {
             system("cls");
             ImprimirTablero();
-            Gotoxy(30, 25);
+            Gotoxy(30, 25);     //mensaje victoria
             cout << "¡" << ((TurnoJugador == 'X') ? playerX : playerO) << " ha ganado!" << endl;
             break;
         }
