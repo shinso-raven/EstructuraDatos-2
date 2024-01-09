@@ -2,7 +2,7 @@
  *  +=============== Presentación ===============+
  *
  *  Enunciado del problema:
- *  Realizar un programa C++ que un juego de Tic Tac Toe usando el paradigma de Fuerza Bruta (Brute Force).
+ *  Realizar un programa C++ que un juego de Tic Tac Toe player vs maquina.
  *  Autores (ID - Nombre):
  *  1107555 - Angel Soriano
  *  1114790 - Gabriel Antonio Alba Natera
@@ -10,7 +10,7 @@
  *  1116252 - Radhames Ventura
  *
  *  Fecha en la que se desarrollo el programa (dd/mm/aa):
- *  14/11/2023
+ *  8/1/2024
  */
 
 
@@ -130,6 +130,7 @@ char ValidarXoO(string teclado) {
 void menuInicio(char& JugadorInicial) {
     bool inputValid = false;
     string teclado;
+    char entradaJugador = '-';
     int y = 0;
     JugadorInicial = '-';
     Gotoxy(40, y++); cout << char(218);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(191) << endl;
@@ -148,13 +149,25 @@ void menuInicio(char& JugadorInicial) {
     cout << "Ingrese el nombre del jugador: ";
     cin >> nombrePlayer;
 
-    cout << "Ingrese su letra [X] o [O]";
 
+    while (entradaJugador == '-')
+    {
+        cout << "Ingrese su letra [X] o [O]: ";
+        cin >> teclado;
 
-    cout << "Ingrese el nombre del jugador X: ";
-    cin >> playerX;
-    cout << "Ingrese el nombre del jugador O: ";
-    cin >> playerO;
+        entradaJugador = ValidarXoO(teclado);
+        cout << endl;
+    }
+    
+    if (entradaJugador == 'X')
+    {
+        playerX = nombrePlayer;
+        playerO = maquinaNombre;
+    }
+    else {
+        playerO = nombrePlayer;
+        playerX = maquinaNombre;
+    }
 
 
 
@@ -167,17 +180,7 @@ void menuInicio(char& JugadorInicial) {
 
         JugadorInicial =  ValidarXoO(teclado);
 
-        if (teclado == "X" || teclado == "x") {
-            JugadorInicial = 'X';
-            inputValid = true;
-        }
-        else if (teclado == "O" || teclado == "o") {
-            JugadorInicial = 'O';
-            inputValid = true;
-        }
-        else if (!EsNumeroValido(teclado, 1)) {
-            cout << "\n\tEntrada inválida. Debes seleccionar 'X' o 'O'." << endl;
-        }
+       
         cout << endl;
     }
 }
@@ -190,29 +193,143 @@ void LimpiarPantalla() {
 #pragma endregion
 
 // Función para verificar si alguien ha ganado, usa la fuerza bruta para verificar todas las opciones de victoria posibles. 
-bool Victoria() {
+char Victoria(const char tableroTemp[3][3], char jugadorActual) {
     // Implementa las reglas para verificar si un jugador ha ganado
     // (filas, columnas, diagonales)
-
+    bool victoria = false;
     // Comprueba filas y columnas
     for (int i = 0; i < 3; i++) {
-        if (Tablero[i][0] == TurnoJugador && Tablero[i][1] == TurnoJugador && Tablero[i][2] == TurnoJugador)
-            return true;
-        if (Tablero[0][i] == TurnoJugador && Tablero[1][i] == TurnoJugador && Tablero[2][i] == TurnoJugador)
-            return true;
+        if (Tablero[i][0] == jugadorActual && Tablero[i][1] == jugadorActual && Tablero[i][2] == jugadorActual)
+            victoria =  true;
+        if (Tablero[0][i] == jugadorActual && Tablero[1][i] == jugadorActual && Tablero[2][i] == jugadorActual)
+            victoria = true;
     }
 
     // Comprueba diagonales
-    if (Tablero[0][0] == TurnoJugador && Tablero[1][1] == TurnoJugador && Tablero[2][2] == TurnoJugador)
-        return true;
-    if (Tablero[0][2] == TurnoJugador && Tablero[1][1] == TurnoJugador && Tablero[2][0] == TurnoJugador)
-        return true;
+    if (Tablero[0][0] == jugadorActual && Tablero[1][1] == jugadorActual && Tablero[2][2] == jugadorActual)
+        victoria = true;
+    if (Tablero[0][2] == jugadorActual && Tablero[1][1] == jugadorActual && Tablero[2][0] == jugadorActual)
+        victoria = true;
 
-    return false;
+
+    if (victoria)
+    {
+        return jugadorActual;
+    }
+    else
+    {
+        return '-';
+
+    }
 }
 
+int minimoMaximo(char tempTablero[3][3]) {
+
+    char letraJugador, letraMaquina, ganador;
+    int puntuacion = 0, minimaPuntuacion = 2;
+    if (playerO == maquinaNombre)
+    {
+        letraJugador= 'X';
+        letraMaquina = 'O';
+    }
+    else
+    {
+        letraJugador = 'O';
+        letraMaquina = 'X';
+    }
+
+    ganador = Victoria(tempTablero, letraMaquina);
+    if (ganador ==letraMaquina)
+    {
+        return 1;
+    }
+
+    //Posibles soluciones
+    for (int filas = 0; filas < 3; filas++)
+    {
+        for (int columnas = 0; columnas < 3; columnas++)
+        {
+            if (tempTablero[filas][columnas] == ' ')
+            {
+                tempTablero[filas][columnas] = letraJugador;
+
+                //evaluar posibilidad
+                ganador = Victoria(tempTablero, letraJugador);
+
+                tempTablero[filas][columnas] = ' ';
+
+                if (ganador != '-')
+                {
+                    //puntuacion = (ganador == letraJugador) ? -1 : 1;
+                    puntuacion = -1;
+                    
+                }
+                else
+                {
+                    puntuacion = 0;
+                }
 
 
+                if (puntuacion < minimaPuntuacion)
+                {
+                    minimaPuntuacion = puntuacion;
+                }
+            }
+            
+        }
+    }
+
+    return minimaPuntuacion;
+
+}
+
+string JugarMaquina(char tableroTemp[3][3]) {
+    char letraMaquina;
+    int mejorPuntuacion = -2, puntuacion = 0;
+
+    string fila, columna, movimiento;
+
+    if (playerX == maquinaNombre )
+    {
+        letraMaquina = 'X';
+    }
+    else
+    {
+        letraMaquina = 'O';
+    }
+
+
+    for (int filas = 0; filas < 3; filas++)
+    {
+        for (int columnas = 0; columnas < 3; columnas++)
+        {
+            //posiciones vacias
+            if (tableroTemp[filas][columnas] == ' ')
+            {
+                tableroTemp[filas][columnas] = letraMaquina;
+                //minimo maximo
+                puntuacion = minimoMaximo(tableroTemp);
+
+                tableroTemp[filas][columnas] = ' ';
+
+
+                if (puntuacion > mejorPuntuacion)
+                {
+                    mejorPuntuacion = puntuacion;
+                    fila = to_string(filas+1);
+                    columna = to_string(columnas+1);
+                    movimiento = fila + columna;
+
+                }
+            }
+        }
+    }
+
+
+
+    return movimiento;
+
+}
 
 
 void EjectutarTicTacToe()
@@ -244,25 +361,27 @@ void EjectutarTicTacToe()
         cout << "Turno de " << ((TurnoJugador == 'X') ? playerX : playerO) << endl;
         Gotoxy(0, 0);
 
+        string jugadorActual = ((TurnoJugador == 'X') ? playerX : playerO);
 
-
-
-        // Entrada de filas y columnas del jugador HUMANO
-        cout << "Ingresa la fila y columna (1-3): ";
-        cin >> entrada;
-
-        if (!EsNumeroValido(entrada,2))
+        if (jugadorActual == maquinaNombre)
         {
-            Gotoxy(30,25);
-            cout << "Entrada inválida. Solo dos numeros entre 3 y 1." << endl;
-            LimpiarPantalla();
-            continue;
+            //turno de la maquina
+           entrada = JugarMaquina(Tablero);
         }
+        else
+        {
+            // Entrada de filas y columnas del jugador HUMANO
+            cout << "Ingresa la fila y columna (1-3): ";
+            cin >> entrada;
 
-
-
-
-
+            if (!EsNumeroValido(entrada, 2))
+            {
+                Gotoxy(30, 25);
+                cout << "Entrada inválida. Solo dos numeros entre 3 y 1." << endl;
+                LimpiarPantalla();
+                continue;
+            }
+        }
         //Se convierte la entrada ASCII en su contraparte numerica
         Fila = entrada[0] - '0' - 1;
         Columna = entrada[1] - '0' - 1;
@@ -279,8 +398,10 @@ void EjectutarTicTacToe()
         Tablero[Fila][Columna] = TurnoJugador;
         Movimientos++;
 
+
+
         // Verificación del resultado del juego
-        if (Victoria()) {
+        if (Victoria(Tablero, TurnoJugador) != '-') {
             system("cls");
             ImprimirTablero();
             Gotoxy(30, 25);     //mensaje victoria
