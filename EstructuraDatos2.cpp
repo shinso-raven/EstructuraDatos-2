@@ -19,6 +19,7 @@ using namespace std;
 #include <iostream>
 #include <string>
 #include "TicTacToe.h"
+#include "Baraje de cartas.h"
 
 
 
@@ -26,8 +27,8 @@ int main() {
    
     bool continuar = true;
     
-        
-        EjectutarTicTacToe();
+    //EjecutarBarajeCartas();
+       EjectutarTicTacToe();
 
    
     return 0;

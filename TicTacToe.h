@@ -31,8 +31,8 @@ char Tablero[3][3] = {
 };
 
 char TurnoJugador = 'X';
-string playerX, playerO;
-
+string playerX, playerO, nombrePlayer;
+string maquinaNombre = "maquina";
 
 
 bool EsNumeroValido(string str, int maxChar) {
@@ -99,11 +99,39 @@ void ImprimirTablero() {
     NombreJugadores();
 }
 
+
+
+char ValidarXoO(string teclado) {
+    bool inputValid = false;
+    char JugadorInicial = ' ';
+
+    if (teclado == "X" || teclado == "x") {
+        JugadorInicial = 'X';
+        inputValid = true;
+    }
+    else if (teclado == "O" || teclado == "o") {
+        JugadorInicial = 'O';
+        inputValid = true;
+    }
+    else if (!EsNumeroValido(teclado, 1)) {
+        cout << "\n\tEntrada inválida. Debes seleccionar 'X' o 'O'." << endl;
+    }
+    cout << endl;
+
+    if (inputValid) {
+        return JugadorInicial;
+
+    }
+    else {
+        return '-';
+    }
+}
+
 void menuInicio(char& JugadorInicial) {
     bool inputValid = false;
     string teclado;
     int y = 0;
-
+    JugadorInicial = '-';
     Gotoxy(40, y++); cout << char(218);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(191) << endl;
     Gotoxy(40, y++); cout << char(179) << "                     " << char(179) << endl;
     Gotoxy(40, y++); cout << char(179) << "                     " << char(179) << endl;
@@ -112,10 +140,17 @@ void menuInicio(char& JugadorInicial) {
     Gotoxy(40, y++); cout << char(179) << "                     " << char(179) << endl;
     Gotoxy(40, y++); cout << char(192);      for (int i = 0; i < 21; i++) { cout << char(196); }      cout << char(217) << endl;
 
-
+            //Hacer que el jugador seleccione X o O, ese player tiene nombre, el otro se llama "maquina"
 
     // Entrada de nombres de jugadores
     cout << "\t\tMENU INICIO\n";
+
+    cout << "Ingrese el nombre del jugador: ";
+    cin >> nombrePlayer;
+
+    cout << "Ingrese su letra [X] o [O]";
+
+
     cout << "Ingrese el nombre del jugador X: ";
     cin >> playerX;
     cout << "Ingrese el nombre del jugador O: ";
@@ -123,11 +158,14 @@ void menuInicio(char& JugadorInicial) {
 
 
 
-    while (!inputValid)
+    while (JugadorInicial == '-')
     {
         // Selección del jugador que comienza
         cout << "Seleccione quién comenzará (" << playerX << "[X] o " << playerO << "[O] ): ";
         cin >> teclado;
+
+
+        JugadorInicial =  ValidarXoO(teclado);
 
         if (teclado == "X" || teclado == "x") {
             JugadorInicial = 'X';
@@ -191,7 +229,7 @@ void EjectutarTicTacToe()
     LimpiarPantalla();
 
     //Ya la selección fue validada
-    if (JugadorInicial == 'X' || JugadorInicial == 'x') {
+    if (JugadorInicial == 'X') {
         TurnoJugador = 'X';
     }
     else {
@@ -206,7 +244,10 @@ void EjectutarTicTacToe()
         cout << "Turno de " << ((TurnoJugador == 'X') ? playerX : playerO) << endl;
         Gotoxy(0, 0);
 
-        // Entrada de filas y columnas del jugador
+
+
+
+        // Entrada de filas y columnas del jugador HUMANO
         cout << "Ingresa la fila y columna (1-3): ";
         cin >> entrada;
 
@@ -217,6 +258,11 @@ void EjectutarTicTacToe()
             LimpiarPantalla();
             continue;
         }
+
+
+
+
+
         //Se convierte la entrada ASCII en su contraparte numerica
         Fila = entrada[0] - '0' - 1;
         Columna = entrada[1] - '0' - 1;

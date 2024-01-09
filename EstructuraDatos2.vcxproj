@@ -130,6 +130,7 @@
     <ClCompile Include="EstructuraDatos2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Baraje de cartas.h" />
     <ClInclude Include="TicTacToe.h" />
     <ClInclude Include="NumeroALetra.h" />
   </ItemGroup>
