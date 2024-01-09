@@ -223,10 +223,10 @@ char Victoria(const char tableroTemp[3][3], char jugadorActual) {
     }
 }
 
-int minimoMaximo(char tempTablero[3][3]) {
+int minimoMaximo(char tempTablero[3][3], bool maximizar) {
 
     char letraJugador, letraMaquina, ganador;
-    int puntuacion = 0, minimaPuntuacion = 2;
+    int puntuacion = 0, limitePuntuacion, resultado;
     if (playerO == maquinaNombre)
     {
         letraJugador= 'X';
@@ -243,43 +243,70 @@ int minimoMaximo(char tempTablero[3][3]) {
     {
         return 1;
     }
+    ganador = Victoria(tempTablero, letraJugador);
+    if (ganador == letraJugador)
+    {
+        return -1;
+    }
+    
 
     //Posibles soluciones
-    for (int filas = 0; filas < 3; filas++)
+    if (maximizar)
     {
-        for (int columnas = 0; columnas < 3; columnas++)
+        limitePuntuacion = -INT_MAX;
+        for (int filas = 0; filas < 3; filas++)
         {
-            if (tempTablero[filas][columnas] == ' ')
+            for (int columnas = 0; columnas < 3; columnas++)
             {
-                tempTablero[filas][columnas] = letraJugador;
-
-                //evaluar posibilidad
-                ganador = Victoria(tempTablero, letraJugador);
-
-                tempTablero[filas][columnas] = ' ';
-
-                if (ganador != '-')
+                if (tempTablero[filas][columnas] == ' ')
                 {
-                    //puntuacion = (ganador == letraJugador) ? -1 : 1;
-                    puntuacion = -1;
-                    
-                }
-                else
-                {
-                    puntuacion = 0;
+                    tempTablero[filas][columnas] = letraMaquina;
+
+                    //evaluar posibilidad
+                    puntuacion = minimoMaximo(tempTablero, false);
+
+                    tempTablero[filas][columnas] = ' ';
+
+                    if (puntuacion > limitePuntuacion)
+                    {
+                        limitePuntuacion = puntuacion;
+
+                    }
                 }
 
-
-                if (puntuacion < minimaPuntuacion)
-                {
-                    minimaPuntuacion = puntuacion;
-                }
             }
-            
         }
+        return limitePuntuacion;
+    }
+    else
+    {
+        limitePuntuacion = INT_MAX;
+        for (int filas = 0; filas < 3; filas++)
+        {
+            for (int columnas = 0; columnas < 3; columnas++)
+            {
+                if (tempTablero[filas][columnas] == ' ')
+                {
+                    tempTablero[filas][columnas] = letraJugador;
+
+                    //evaluar posibilidad
+                    puntuacion = minimoMaximo(tempTablero, true);
+
+                    tempTablero[filas][columnas] = ' ';
+
+                    if (puntuacion < limitePuntuacion)
+                    {
+                        limitePuntuacion = puntuacion;
+
+                    }
+                }
+
+            }
+        }
+        return limitePuntuacion;
     }
 
-    return minimaPuntuacion;
+
 
 }
 
@@ -308,7 +335,7 @@ string JugarMaquina(char tableroTemp[3][3]) {
             {
                 tableroTemp[filas][columnas] = letraMaquina;
                 //minimo maximo
-                puntuacion = minimoMaximo(tableroTemp);
+                puntuacion = minimoMaximo(tableroTemp, false);
 
                 tableroTemp[filas][columnas] = ' ';
 
